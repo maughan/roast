@@ -20,6 +20,7 @@ const toBase64 = (file: File): Promise<string> => {
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<unknown>();
 
   const {
     register,
@@ -37,7 +38,9 @@ export default function Home() {
     await fetch("/api/roast", {
       method: "POST",
       body: formData,
-    }).finally(() => setLoading(false));
+    })
+      .then(setData)
+      .finally(() => setLoading(false));
   });
 
   const validateFiles = (value: FileList) => {
@@ -102,6 +105,7 @@ export default function Home() {
             </Button>
           </Box>
         </form>
+        {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
       </VStack>
     </Box>
   );
