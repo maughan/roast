@@ -4,7 +4,7 @@ import {FileUpload} from "./components/file-upload";
 import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
-import processImage from "./api/hello";
+import processImage from "./api/roast";
 
 interface FormValues {
   file: FileList;
