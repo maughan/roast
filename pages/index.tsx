@@ -31,9 +31,12 @@ export default function Home() {
     setLoading(true);
     const file = data.file[0];
 
+    const formData = new FormData();
+    formData.set("image", await toBase64(file));
+
     await fetch("/api/roast", {
       method: "POST",
-      body: await toBase64(file),
+      body: formData,
     }).finally(() => setLoading(false));
   });
 
@@ -47,7 +50,7 @@ export default function Home() {
       const MAX_FILE_SIZE = 10;
 
       if (fsMb > MAX_FILE_SIZE) {
-        return "Max file size 10mb";
+        return `Max file size ${MAX_FILE_SIZE}mb`;
       }
     }
 
@@ -83,7 +86,6 @@ export default function Home() {
             <FormControl isInvalid={!!errors.file} isRequired isDisabled={loading}>
               <FileUpload
                 accept="image/*"
-                multiple
                 register={register("file", {validate: validateFiles})}
                 loading={loading}
               >
