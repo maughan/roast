@@ -25,11 +25,4 @@ export default withCatch(async (req, res) => {
   console.log(data);
 
   res.json("OK");
-
-  // const [results] = await client.faceDetection(req.body);
-
-  // console.log("labels:");
-  // console.log(results);
-
-  // res.json(results);
 });
