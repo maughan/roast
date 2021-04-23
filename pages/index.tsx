@@ -73,7 +73,7 @@ export default function Home() {
       body: formData,
     })
       .then(res => res.json())
-      .then(res => setResults(res.faceAnnotations[0]))
+      .then(setResults)
       .finally(() => setLoading(false));
   });
 
