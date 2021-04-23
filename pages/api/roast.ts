@@ -20,7 +20,7 @@ export default withCatch(async (req, res) => {
       throw new HttpException(500, err.message);
     }
 
-    console.log(fields.image);
+    client.faceDetection(Buffer.from(fields.image as string));
 
     res.json("OK");
   });
