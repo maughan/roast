@@ -1,13 +1,24 @@
 import React from "react";
-import {Box, Heading, HStack, Link, Text, VStack} from "@chakra-ui/react";
+import {Box, Heading, Link, Text, VStack} from "@chakra-ui/react";
 import {FileUpload} from "./components/file-upload";
 import {useForm} from "react-hook-form";
-import {Button, FormControl, FormErrorMessage, FormLabel, Icon} from "@chakra-ui/react";
+import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
+import vision from "@google-cloud/vision";
 
 type FormValues = {
   file_: FileList;
 };
+
+const client = new vision.ImageAnnotatorClient();
+
+export async function processImage(image: string) {
+  const [results] = await client.labelDetection(image);
+  const labels = results.labelAnnotations;
+  console.log("labels:");
+  if (!labels) return;
+  labels.forEach(label => console.log(label.description));
+}
 
 export default function Home() {
   const {
