@@ -1,10 +1,7 @@
 import * as vision from "@google-cloud/vision";
 import {HttpException, withCatch} from "../../lib/http";
-import multiparty from "multiparty";
 
 const client = new vision.default.ImageAnnotatorClient();
-
-const form = new multiparty.Form();
 
 export const config = {
   api: {
@@ -20,7 +17,7 @@ export default withCatch(async (req, res) => {
   let body = "";
   for await (const chunk of req) body += chunk;
 
-  res.json("balls");
+  console.log(body);
 
   // const [results] = await client.faceDetection(req.body);
 
