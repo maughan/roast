@@ -4,6 +4,7 @@ import {FileUpload} from "./components/file-upload";
 import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
+import processImage from "./api/hello";
 
 type FormValues = {
   file: FileList;
@@ -66,7 +67,13 @@ export default function Home() {
               <FormErrorMessage>{errors.file && errors?.file.message}</FormErrorMessage>
             </FormControl>
 
-            <Button>Submit</Button>
+            <Button
+              onClick={async () => {
+                await fetch("/api/hello", {method: "POST", body: ""});
+              }}
+            >
+              Submit
+            </Button>
           </Box>
         </form>
       </VStack>
