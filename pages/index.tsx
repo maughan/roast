@@ -36,7 +36,7 @@ export default function Home() {
 
     await fetch("/api/roast", {
       method: "POST",
-      body: await toBase64(data.file[0]),
+      body: formData,
     }).finally(() => setLoading(false));
   });
 
