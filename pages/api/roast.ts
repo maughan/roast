@@ -8,6 +8,7 @@ export default withCatch(async function (req: NextApiRequest, res: NextApiRespon
   if (req.method !== "POST") {
     throw new HttpException(405, "You must POST to this route.");
   }
+
   const buffer = req.body;
   const [results] = await client.faceDetection(buffer);
   console.log("labels:");

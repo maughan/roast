@@ -7,6 +7,7 @@ type FileUploadProps = {
   accept?: string;
   multiple?: boolean;
   children?: ReactNode;
+  loading?: boolean;
 };
 
 export function FileUpload(props: FileUploadProps) {
@@ -23,6 +24,7 @@ export function FileUpload(props: FileUploadProps) {
         multiple={multiple || false}
         hidden
         accept={accept}
+        disabled={props.loading}
         {...rest}
         ref={e => {
           ref(e);

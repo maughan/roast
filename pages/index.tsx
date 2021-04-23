@@ -39,7 +39,7 @@ export default function Home() {
 
   const validateFiles = (value: FileList) => {
     if (value.length < 1) {
-      return "Files is required";
+      return "File is required";
     }
 
     for (const file of Array.from(value)) {
@@ -60,6 +60,7 @@ export default function Home() {
         <Heading color="gray.700" size="4xl">
           plsroast.me
         </Heading>
+
         <Text>
           Another stupid project by{" "}
           <Link color="blue.500" isExternal href="https://twitter.com/aabbccsmith">
@@ -71,15 +72,24 @@ export default function Home() {
           </Link>
         </Text>
 
+        <Text>
+          images are not stored on the server
+          <br />
+          we have no privacy policy 👍
+        </Text>
+
         <form onSubmit={onSubmit}>
           <Box display="flex">
-            <FormControl isInvalid={!!errors.file} isRequired>
+            <FormControl isInvalid={!!errors.file} isRequired isDisabled={loading}>
               <FileUpload
                 accept="image/*"
                 multiple
                 register={register("file", {validate: validateFiles})}
+                loading={loading}
               >
-                <Button leftIcon={<Icon as={FiFile} />}>Upload</Button>
+                <Button disabled={loading} leftIcon={<Icon as={FiFile} />}>
+                  Choose File
+                </Button>
               </FileUpload>
 
               <FormErrorMessage>{errors.file && errors?.file.message}</FormErrorMessage>
