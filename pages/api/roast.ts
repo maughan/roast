@@ -20,12 +20,10 @@ export default withCatch(async (req, res) => {
   let body = "";
   for await (const chunk of req) body += chunk;
 
-  res.json("balls");
+  const [results] = await client.faceDetection(body);
 
-  // const [results] = await client.faceDetection(req.body);
+  console.log("labels:");
+  console.log(results);
 
-  // console.log("labels:");
-  // console.log(results);
-
-  // res.json(results);
+  res.json(results);
 });
