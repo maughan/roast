@@ -4,20 +4,10 @@ import {FileUpload} from "./components/file-upload";
 import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
-import * as vision from "@google-cloud/vision";
+import processImage from "./api/hello";
 
 interface FormValues {
   file: FileList;
-}
-
-const client = new vision.ImageAnnotatorClient();
-
-export async function processImage() {
-  const [results] = await client.labelDetection("");
-  const labels = results.labelAnnotations;
-  console.log("labels:");
-  if (!labels) return;
-  labels.forEach(label => console.log(label.description));
 }
 
 export default function Home() {
@@ -77,7 +67,13 @@ export default function Home() {
               <FormErrorMessage>{errors.file && errors?.file.message}</FormErrorMessage>
             </FormControl>
 
-            <Button>Submit</Button>
+            <Button
+              onClick={async () => {
+                await fetch("/api/hello", {method: "POST", body: ""});
+              }}
+            >
+              Submit
+            </Button>
           </Box>
         </form>
       </VStack>
