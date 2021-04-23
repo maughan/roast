@@ -6,9 +6,9 @@ import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
 import * as vision from "@google-cloud/vision";
 
-type FormValues = {
+interface FormValues {
   file: FileList;
-};
+}
 
 const client = new vision.ImageAnnotatorClient();
 
@@ -67,7 +67,7 @@ export default function Home() {
           <Box display="flex">
             <FormControl isInvalid={!!errors.file} isRequired>
               <FileUpload
-                accept={"image/*"}
+                accept="image/*"
                 multiple
                 register={register("file", {validate: validateFiles})}
               >
