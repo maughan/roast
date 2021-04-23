@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Box, Heading, Link, Text, VStack} from "@chakra-ui/react";
-import {FileUpload} from "./components/file-upload";
+import {FileUpload} from "../components/file-upload";
 import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";

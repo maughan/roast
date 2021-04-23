@@ -9,6 +9,7 @@ export default withCatch(async (req, res) => {
   }
 
   const [results] = await client.faceDetection(req.body);
+
   console.log("labels:");
   console.log(results);
 
