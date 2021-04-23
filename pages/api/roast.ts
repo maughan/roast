@@ -15,6 +15,8 @@ export default withCatch(async (req, res) => {
   let body = "";
   for await (const chunk of req) body += chunk;
 
+  console.log(body);
+
   const [, boundary = null] = req.headers["content-type"]?.split("boundary=") ?? [];
 
   if (!boundary) {
