@@ -10,9 +10,11 @@ export default withCatch(async function (req: NextApiRequest, res: NextApiRespon
   }
 
   const [results] = await client.faceDetection("");
-  const labels = results.labelAnnotations;
   console.log("labels:");
-  if (!labels) return;
 
-  res.json(labels);
+  if (!results.labelAnnotations) {
+    throw new HttpException(500, "Could not find any info for this image");
+  }
+
+  res.json(results.labelAnnotations);
 });
