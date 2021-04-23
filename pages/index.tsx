@@ -2,11 +2,11 @@ import React from "react";
 import {Box, Heading, HStack, Link, Text, VStack} from "@chakra-ui/react";
 import {FileUpload} from "./components/file-upload";
 import {useForm} from "react-hook-form";
-import {Button, FormControl, FormErrorMessage, FormLabel, Icon} from "@chakra-ui/react";
+import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
 
 type FormValues = {
-  file_: FileList;
+  file: FileList;
 };
 
 export default function Home() {
@@ -54,16 +54,16 @@ export default function Home() {
 
         <form onSubmit={onSubmit}>
           <Box display="flex">
-            <FormControl isInvalid={!!errors.file_} isRequired>
+            <FormControl isInvalid={!!errors.file} isRequired>
               <FileUpload
                 accept={"image/*"}
                 multiple
-                register={register("file_", {validate: validateFiles})}
+                register={register("file", {validate: validateFiles})}
               >
                 <Button leftIcon={<Icon as={FiFile} />}>Upload</Button>
               </FileUpload>
 
-              <FormErrorMessage>{errors.file_ && errors?.file_.message}</FormErrorMessage>
+              <FormErrorMessage>{errors.file && errors?.file.message}</FormErrorMessage>
             </FormControl>
 
             <Button>Submit</Button>
