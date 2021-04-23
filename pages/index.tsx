@@ -39,6 +39,7 @@ export default function Home() {
       method: "POST",
       body: formData,
     })
+      .then(x => x.json())
       .then(setData)
       .finally(() => setLoading(false));
   });
