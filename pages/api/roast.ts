@@ -1,5 +1,6 @@
 import * as vision from "@google-cloud/vision";
 import {HttpException, withCatch} from "../../lib/http";
+import {IncomingForm} from "formidable";
 
 const client = new vision.default.ImageAnnotatorClient();
 
@@ -12,16 +13,16 @@ export default withCatch(async (req, res) => {
     throw new HttpException(405, "You must POST to this route.");
   }
 
-  let body = "";
-  for await (const chunk of req) body += chunk;
+  const data = await new Promise((resolve, reject) => {
+    const form = new IncomingForm();
 
-  console.log(body);
+    form.parse(req, (err, fields, files) => {
+      if (err) return reject(err);
+      resolve({fields, files});
+    });
+  });
 
-  const [, boundary = null] = req.headers["content-type"]?.split("boundary=") ?? [];
-
-  if (!boundary) {
-    throw new HttpException(422, "No image boundary sent");
-  }
+  console.log(data);
 
   res.json("OK");
 });
