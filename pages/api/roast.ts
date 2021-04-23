@@ -1,4 +1,4 @@
-import * as vision from "@google-cloud/vision";
+import vision from "@google-cloud/vision";
 import {HttpException, withCatch} from "../../lib/http";
 import {IncomingForm} from "formidable";
 
