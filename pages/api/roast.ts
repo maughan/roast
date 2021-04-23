@@ -8,9 +8,10 @@ export default withCatch(async function (req: NextApiRequest, res: NextApiRespon
   if (req.method !== "POST") {
     throw new HttpException(405, "You must POST to this route.");
   }
-
-  const [results] = await client.faceDetection("");
+  const buffer = req.body;
+  const [results] = await client.faceDetection(buffer);
   console.log("labels:");
+  console.log(results);
 
   if (!results.labelAnnotations) {
     throw new HttpException(500, "Could not find any info for this image");
