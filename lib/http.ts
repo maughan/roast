@@ -1,7 +1,11 @@
 import {NextApiHandler} from "next";
 
 export const withCatch = (handler: NextApiHandler): NextApiHandler => {
+  console.log("with catch created");
+
   return async (req, res) => {
+    console.log("req");
+
     try {
       await handler(req, res);
     } catch (e) {
