@@ -1,8 +1,6 @@
 import {NextApiHandler} from "next";
 
-export type Middleware = (handler: NextApiHandler) => NextApiHandler;
-
-export const withCatch: Middleware = handler => {
+export const withCatch = (handler: NextApiHandler): NextApiHandler => {
   return async (req, res) => {
     try {
       await handler(req, res);

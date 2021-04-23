@@ -1,11 +1,9 @@
-import {NextApiRequest, NextApiResponse} from "next";
 import * as vision from "@google-cloud/vision";
 import {HttpException, withCatch} from "../../lib/http";
 
 const client = new vision.default.ImageAnnotatorClient();
 
-export default withCatch(async function (req: NextApiRequest, res: NextApiResponse) {
-  console.log("roast called");
+export default withCatch(async (req, res) => {
   if (req.method !== "POST") {
     throw new HttpException(405, "You must POST to this route.");
   }
