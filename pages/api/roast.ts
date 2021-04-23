@@ -5,19 +5,13 @@ import {HttpException, withCatch} from "../../lib/http";
 const client = new vision.default.ImageAnnotatorClient();
 
 export default withCatch(async function (req: NextApiRequest, res: NextApiResponse) {
+  console.log("roast called");
   if (req.method !== "POST") {
     throw new HttpException(405, "You must POST to this route.");
   }
+  const [results] = await client.faceDetection(Buffer.from(req.body, "base64"));
+  console.log("labels:");
+  console.log(results);
 
-  if (req.body) {
-    const [results] = await client.faceDetection(req.body);
-    console.log("labels:");
-
-    if (!results.labelAnnotations) {
-      throw new HttpException(500, "Could not find any info for this image");
-    }
-
-    res.json(results.labelAnnotations);
-  }
-  res.send(200);
+  res.json(results);
 });
