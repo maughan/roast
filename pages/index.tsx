@@ -17,7 +17,10 @@ export default function Home() {
     formState: {errors},
   } = useForm<FormValues>();
 
-  const onSubmit = handleSubmit(data => console.log("On Submit: ", data));
+  const onSubmit = handleSubmit(async data => {
+    const file = data.file[0];
+    await fetch("/api/roast", {method: "POST", body: await file.text()});
+  });
 
   const validateFiles = (value: FileList) => {
     if (value.length < 1) {
@@ -67,13 +70,7 @@ export default function Home() {
               <FormErrorMessage>{errors.file && errors?.file.message}</FormErrorMessage>
             </FormControl>
 
-            <Button
-              onClick={async () => {
-                await fetch("/api/hello", {method: "POST", body: ""});
-              }}
-            >
-              Submit
-            </Button>
+            <Button type="submit">Submit</Button>
           </Box>
         </form>
       </VStack>
