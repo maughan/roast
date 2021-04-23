@@ -4,9 +4,7 @@ import {HttpException, withCatch} from "../../lib/http";
 const client = new vision.default.ImageAnnotatorClient();
 
 export const config = {
-  api: {
-    bodyParser: false,
-  },
+  api: {bodyParser: false},
 };
 
 export default withCatch(async (req, res) => {
@@ -17,7 +15,13 @@ export default withCatch(async (req, res) => {
   let body = "";
   for await (const chunk of req) body += chunk;
 
-  console.log(body);
+  const [, boundary = null] = req.headers["content-type"]?.split("boundary=") ?? [];
+
+  if (!boundary) {
+    throw new HttpException(422, "No image boundary sent");
+  }
+
+  res.json("OK");
 
   // const [results] = await client.faceDetection(req.body);
 
