@@ -9,6 +9,15 @@ interface FormValues {
   file: FileList;
 }
 
+const toBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
+};
+
 export default function Home() {
   const {
     register,
@@ -18,7 +27,11 @@ export default function Home() {
 
   const onSubmit = handleSubmit(async data => {
     const file = data.file[0];
-    await fetch("/api/roast", {method: "POST", body: await file.text()});
+
+    await fetch("/api/roast", {
+      method: "POST",
+      body: await toBase64(file),
+    });
   });
 
   const validateFiles = (value: FileList) => {
