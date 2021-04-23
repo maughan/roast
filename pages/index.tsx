@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Box, Heading, Link, Text, VStack} from "@chakra-ui/react";
 import {FileUpload} from "./components/file-upload";
 import {useForm} from "react-hook-form";
@@ -19,6 +19,8 @@ const toBase64 = (file: File): Promise<string> => {
 };
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -26,17 +28,18 @@ export default function Home() {
   } = useForm<FormValues>();
 
   const onSubmit = handleSubmit(async data => {
+    setLoading(true);
     const file = data.file[0];
 
     await fetch("/api/roast", {
       method: "POST",
       body: await toBase64(file),
-    });
+    }).finally(() => setLoading(false));
   });
 
   const validateFiles = (value: FileList) => {
     if (value.length < 1) {
-      return "Files is required";
+      return "File is required";
     }
 
     for (const file of Array.from(value)) {
@@ -57,6 +60,7 @@ export default function Home() {
         <Heading color="gray.700" size="4xl">
           plsroast.me
         </Heading>
+
         <Text>
           Another stupid project by{" "}
           <Link color="blue.500" isExternal href="https://twitter.com/aabbccsmith">
@@ -68,21 +72,32 @@ export default function Home() {
           </Link>
         </Text>
 
+        <Text>
+          images are not stored on the server
+          <br />
+          we have no privacy policy 👍
+        </Text>
+
         <form onSubmit={onSubmit}>
           <Box display="flex">
-            <FormControl isInvalid={!!errors.file} isRequired>
+            <FormControl isInvalid={!!errors.file} isRequired isDisabled={loading}>
               <FileUpload
                 accept="image/*"
                 multiple
                 register={register("file", {validate: validateFiles})}
+                loading={loading}
               >
-                <Button leftIcon={<Icon as={FiFile} />}>Upload</Button>
+                <Button disabled={loading} leftIcon={<Icon as={FiFile} />}>
+                  Choose File
+                </Button>
               </FileUpload>
 
               <FormErrorMessage>{errors.file && errors?.file.message}</FormErrorMessage>
             </FormControl>
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" isLoading={loading}>
+              Submit
+            </Button>
           </Box>
         </form>
       </VStack>
