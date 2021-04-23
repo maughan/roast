@@ -1,15 +1,10 @@
 import * as vision from "@google-cloud/vision";
 import {HttpException, withCatch} from "../../lib/http";
-import multiparty from "multiparty";
 
 const client = new vision.default.ImageAnnotatorClient();
 
-const form = new multiparty.Form();
-
 export const config = {
-  api: {
-    bodyParser: false,
-  },
+  api: {bodyParser: false},
 };
 
 export default withCatch(async (req, res) => {
@@ -20,10 +15,11 @@ export default withCatch(async (req, res) => {
   let body = "";
   for await (const chunk of req) body += chunk;
 
-  const [results] = await client.faceDetection(body);
+  const [, boundary = null] = req.headers["content-type"]?.split("boundary=") ?? [];
 
-  console.log("labels:");
-  console.log(results);
+  if (!boundary) {
+    throw new HttpException(422, "No image boundary sent");
+  }
 
-  res.json(results);
+  res.json("OK");
 });
