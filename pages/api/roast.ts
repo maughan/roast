@@ -1,8 +1,8 @@
-import * as vision from "@google-cloud/vision";
+import vision from "@google-cloud/vision";
 import {HttpException, withCatch} from "../../lib/http";
 import {IncomingForm} from "formidable";
 
-const client = new vision.default.ImageAnnotatorClient();
+const client = new vision.ImageAnnotatorClient();
 
 export const config = {
   api: {bodyParser: false},
