@@ -7,7 +7,8 @@ export default withCatch(async (req, res) => {
   if (req.method !== "POST") {
     throw new HttpException(405, "You must POST to this route.");
   }
-  const [results] = await client.faceDetection(Buffer.from(req.body, "base64"));
+
+  const [results] = await client.faceDetection(req.body);
   console.log("labels:");
   console.log(results);
 
