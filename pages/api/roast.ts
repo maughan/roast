@@ -15,12 +15,18 @@ export default withCatch(async (req, res) => {
 
   const form = new IncomingForm();
 
-  form.parse(req, async (err, fields, files) => {
+  form.parse(req, async (err, fields) => {
     if (err) {
       throw new HttpException(500, err.message);
     }
 
-    const [result] = await client.faceDetection(Buffer.from(fields.image as string));
+    const image = fields.image as string;
+
+    const [, ...imageSpread] = image.split(",");
+
+    const buffer = Buffer.from(imageSpread.join(","), "base64");
+
+    const [result] = await client.faceDetection(buffer);
 
     res.json(result);
   });
