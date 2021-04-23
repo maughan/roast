@@ -13,16 +13,15 @@ export default withCatch(async (req, res) => {
     throw new HttpException(405, "You must POST to this route.");
   }
 
-  const data = await new Promise((resolve, reject) => {
-    const form = new IncomingForm();
+  const form = new IncomingForm();
 
-    form.parse(req, (err, fields, files) => {
-      if (err) return reject(err);
-      resolve({fields, files});
-    });
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      throw new HttpException(500, err.message);
+    }
+
+    console.log(fields.image);
+
+    res.json("OK");
   });
-
-  console.log(data);
-
-  res.json("OK");
 });
