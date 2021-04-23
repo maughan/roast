@@ -1,5 +1,6 @@
+import { Heading } from "@chakra-ui/layout";
+import React from "react";
+
 export default function Home() {
-  return (
-    <div className="max-w-7xl mx-auto">Hello, Tailwind!</div>
-  )
+  return <Heading size="4xl">Roast Me balls</Heading>;
 }
