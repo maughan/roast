@@ -4,11 +4,19 @@ import {FileUpload} from "./components/file-upload";
 import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
-import processImage from "./api/roast";
 
 interface FormValues {
   file: FileList;
 }
+
+const toBase64 = (file: File): Promise<string> => {
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+};
 
 export default function Home() {
   const {
@@ -19,7 +27,11 @@ export default function Home() {
 
   const onSubmit = handleSubmit(async data => {
     const file = data.file[0];
-    await fetch("/api/roast", {method: "POST", body: await file.text()});
+
+    await fetch("/api/roast", {
+      method: "POST",
+      body: await toBase64(file),
+    });
   });
 
   const validateFiles = (value: FileList) => {
