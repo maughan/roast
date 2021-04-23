@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Heading, Link, Text, VStack} from "@chakra-ui/react";
 import {FileUpload} from "../components/file-upload";
 import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
+import * as vision from "@google-cloud/vision";
 
 interface FormValues {
   file: FileList;
@@ -18,8 +19,42 @@ const toBase64 = (file: File): Promise<string> => {
   });
 };
 
+enum Likelihood {
+  UNKNOWN = "UNKNOWN",
+  VERY_UNLIKELY = "VERY_UNLIKELY",
+  UNLIKELY = "UNLIKELY",
+  POSSIBLE = "POSSIBLE",
+  LIKELY = "LIKELY",
+  VERY_LIKELY = "VERY_LIKELY",
+}
+
+interface Vertices {
+  x: number;
+  y: number;
+  z?: number;
+}
+
+interface FaceRecognition {
+  angerLikelihood: Likelihood;
+  blurredLikelihood: Likelihood;
+  boundingPoly: {vertices: Vertices[]; normalizedVertices: any[]};
+  detectionConfidence: number;
+  fdBoundingPoly: {vertices: Vertices[]; normalizedVertices: any[]};
+  headwearLikelihood: Likelihood;
+  joyLikelihood: Likelihood;
+  landmarkingConfidence: number;
+  landmarks: {type: string; position: Vertices}[];
+  panAngle: number;
+  rollAngle: number;
+  sorrowLikelihood: Likelihood;
+  surpriseLikelihood: Likelihood;
+  tiltAngle: number;
+  underExposedLikelihood: Likelihood;
+}
+
 export default function Home() {
   const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState<FaceRecognition>();
 
   const {
     register,
@@ -37,7 +72,10 @@ export default function Home() {
     await fetch("/api/roast", {
       method: "POST",
       body: formData,
-    }).finally(() => setLoading(false));
+    })
+      .then(res => res.json())
+      .then(res => setResults(res.faceAnnotations[0]))
+      .finally(() => setLoading(false));
   });
 
   const validateFiles = (value: FileList) => {
@@ -102,6 +140,7 @@ export default function Home() {
             </Button>
           </Box>
         </form>
+        <div>{JSON.stringify(results)}</div>
       </VStack>
     </Box>
   );
