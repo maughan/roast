@@ -7,11 +7,11 @@ export default function Home() {
       <Heading size="4xl">Roast Me balls</Heading>
       <Text>
         Another stupid project by{" "}
-        <Link color="blue.500" href="https://twitter.com/aabbccsmith">
+        <Link color="blue.500" isExternal href="https://twitter.com/aabbccsmith">
           @aabbccsmith
         </Link>{" "}
         and{" "}
-        <Link color="blue.500" href="https://twitter.com/rsjm_io">
+        <Link color="blue.500" isExternal href="https://twitter.com/rsjm_io">
           @rsjm_io
         </Link>
       </Text>
