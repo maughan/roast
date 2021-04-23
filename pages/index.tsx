@@ -5,9 +5,9 @@ import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
 
-type FormValues = {
+interface FormValues {
   file: FileList;
-};
+}
 
 export default function Home() {
   const {
@@ -56,7 +56,7 @@ export default function Home() {
           <Box display="flex">
             <FormControl isInvalid={!!errors.file} isRequired>
               <FileUpload
-                accept={"image/*"}
+                accept="image/*"
                 multiple
                 register={register("file", {validate: validateFiles})}
               >
