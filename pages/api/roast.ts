@@ -4,8 +4,6 @@ import {HttpException, withCatch} from "../../lib/http";
 const client = new vision.ImageAnnotatorClient();
 
 export default withCatch(async (req, res) => {
-  console.log("BRUH LOL");
-
   if (req.method !== "POST") {
     throw new HttpException(405, "You must POST to this route.");
   }
