@@ -4,10 +4,7 @@ import {FileUpload} from "../components/file-upload";
 import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
 import {FiFile} from "react-icons/fi";
-
-interface FormValues {
-  file: FileList;
-}
+import {FormValues, VisionResponse} from "../utils/interfaces";
 
 const toBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -18,42 +15,10 @@ const toBase64 = (file: File): Promise<string> => {
   });
 };
 
-enum Likelihood {
-  UNKNOWN = "UNKNOWN",
-  VERY_UNLIKELY = "VERY_UNLIKELY",
-  UNLIKELY = "UNLIKELY",
-  POSSIBLE = "POSSIBLE",
-  LIKELY = "LIKELY",
-  VERY_LIKELY = "VERY_LIKELY",
-}
-
-interface Vertices {
-  x: number;
-  y: number;
-  z?: number;
-}
-
-interface FaceRecognition {
-  angerLikelihood: Likelihood;
-  blurredLikelihood: Likelihood;
-  boundingPoly: {vertices: Vertices[]; normalizedVertices: any[]};
-  detectionConfidence: number;
-  fdBoundingPoly: {vertices: Vertices[]; normalizedVertices: any[]};
-  headwearLikelihood: Likelihood;
-  joyLikelihood: Likelihood;
-  landmarkingConfidence: number;
-  landmarks: {type: string; position: Vertices}[];
-  panAngle: number;
-  rollAngle: number;
-  sorrowLikelihood: Likelihood;
-  surpriseLikelihood: Likelihood;
-  tiltAngle: number;
-  underExposedLikelihood: Likelihood;
-}
-
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<FaceRecognition>();
+  const [results, setResults] = useState<VisionResponse>();
+  const [image, setImage] = useState("");
 
   const {
     register,
@@ -66,7 +31,8 @@ export default function Home() {
     const file = data.file[0];
 
     const formData = new FormData();
-    formData.set("image", await toBase64(file));
+    const string = await toBase64(file);
+    formData.set("image", string);
 
     await fetch("/api/roast", {
       method: "POST",
@@ -75,6 +41,7 @@ export default function Home() {
       .then(res => res.json())
       .then(setResults)
       .finally(() => setLoading(false));
+    setImage(string);
   });
 
   const validateFiles = (value: FileList) => {
@@ -93,6 +60,28 @@ export default function Home() {
 
     return true;
   };
+
+  function generateRoast() {
+    let roasts: string[] = [];
+    let descriptions: string[] = [];
+
+    if (results) {
+      results.labelAnnotations.map(ann => {
+        descriptions.push(ann.description);
+      });
+    }
+
+    if (descriptions.includes("Smile") && descriptions.includes("Glasses")) {
+      roasts.push("What the fuck are you smiling about you speccy cunt.");
+    }
+    if (descriptions.includes("Pleased")) {
+      roasts.push("You look as pleased as a peadophile in a playground.");
+    }
+
+    console.log(descriptions);
+
+    return roasts;
+  }
 
   return (
     <Box textAlign="center" paddingTop="30px">
@@ -127,7 +116,7 @@ export default function Home() {
                 loading={loading}
               >
                 <Button disabled={loading} leftIcon={<Icon as={FiFile} />}>
-                  Choose File
+                  {results ? "Upload another selfie" : "Upload selfie"}
                 </Button>
               </FileUpload>
 
@@ -139,7 +128,8 @@ export default function Home() {
             </Button>
           </Box>
         </form>
-        <div>{JSON.stringify(results)}</div>
+        {image && <img src={image} style={{maxHeight: 300, maxWidth: 300}} />}
+        <div>{generateRoast()}</div>
       </VStack>
     </Box>
   );
