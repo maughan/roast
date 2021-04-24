@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Box, Heading, Link, Text, VStack} from "@chakra-ui/react";
+import {Box, Heading, Link, Text, useToast, VStack} from "@chakra-ui/react";
 import {FileUpload} from "../components/file-upload";
 import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
@@ -33,27 +33,40 @@ interface Vertices {
   z?: number;
 }
 
-interface FaceRecognition {
-  angerLikelihood: Likelihood;
-  blurredLikelihood: Likelihood;
-  boundingPoly: {vertices: Vertices[]; normalizedVertices: any[]};
-  detectionConfidence: number;
-  fdBoundingPoly: {vertices: Vertices[]; normalizedVertices: any[]};
-  headwearLikelihood: Likelihood;
-  joyLikelihood: Likelihood;
-  landmarkingConfidence: number;
-  landmarks: {type: string; position: Vertices}[];
-  panAngle: number;
-  rollAngle: number;
-  sorrowLikelihood: Likelihood;
-  surpriseLikelihood: Likelihood;
-  tiltAngle: number;
-  underExposedLikelihood: Likelihood;
+interface RoastResponse {
+  faceAnnotations: any[];
+  landmarkAnnotations: any[];
+  logoAnnotations: any[];
+  labelAnnotations: LabelAnnotation[];
+  textAnnotations: any[];
+  localizedObjectAnnotations: any[];
+  safeSearchAnnotation: any;
+  imagePropertiesAnnotation: any;
+  error: any;
+  cropHintsAnnotation: any;
+  fullTextAnnotation: any;
+  webDetection: any;
+  productSearchResults: any;
+  context: any;
+}
+
+interface LabelAnnotation {
+  locations: any[];
+  properties: any[];
+  mid: string;
+  locale: string;
+  description: string;
+  score: number;
+  confidence: number;
+  topicality: number;
+  boundingPoly: any;
 }
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<FaceRecognition>();
+  const [results, setResults] = useState<RoastResponse>();
+  const [name, setName] = useState("");
+  const toast = useToast();
 
   const {
     register,
@@ -68,13 +81,24 @@ export default function Home() {
     const formData = new FormData();
     formData.set("image", await toBase64(file));
 
-    await fetch("/api/roast", {
+    const request = fetch("/api/roast", {
       method: "POST",
       body: formData,
-    })
+    });
+
+    request
       .then(res => res.json())
       .then(setResults)
-      .finally(() => setLoading(false));
+      .catch(() => null)
+      .finally(() => {
+        toast({
+          title: "Success",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+        setLoading(false);
+      });
   });
 
   const validateFiles = (value: FileList) => {
@@ -122,12 +146,13 @@ export default function Home() {
           <Box display="flex">
             <FormControl isInvalid={!!errors.file} isRequired isDisabled={loading}>
               <FileUpload
+                setName={setName}
                 accept="image/*"
                 register={register("file", {validate: validateFiles})}
                 loading={loading}
               >
                 <Button disabled={loading} leftIcon={<Icon as={FiFile} />}>
-                  Choose File
+                  {name || "Choose File"}
                 </Button>
               </FileUpload>
 
@@ -139,7 +164,9 @@ export default function Home() {
             </Button>
           </Box>
         </form>
-        <div>{JSON.stringify(results)}</div>
+        {results && (
+          <div>{results.labelAnnotations.map(label => label.description).join(", ")}</div>
+        )}
       </VStack>
     </Box>
   );
