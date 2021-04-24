@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Box, Heading, Link, Text, VStack} from "@chakra-ui/react";
 import {FileUpload} from "../components/file-upload";
 import {useForm} from "react-hook-form";
