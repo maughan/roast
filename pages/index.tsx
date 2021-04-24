@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Box, Heading, Link, Text, VStack} from "@chakra-ui/react";
+import React, {useState} from "react";
+import {Box, Heading, Link, Text, useToast, VStack} from "@chakra-ui/react";
 import {FileUpload} from "../components/file-upload";
 import {useForm} from "react-hook-form";
 import {Button, FormControl, FormErrorMessage, Icon} from "@chakra-ui/react";
@@ -34,10 +34,12 @@ export default function Home() {
     const string = await toBase64(file);
     formData.set("image", string);
 
-    await fetch("/api/roast", {
+    const request = fetch("/api/roast", {
       method: "POST",
       body: formData,
-    })
+    });
+
+    request
       .then(res => res.json())
       .then(setResults)
       .finally(() => setLoading(false));
