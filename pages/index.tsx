@@ -80,8 +80,6 @@ export default function Home() {
       roasts.push("You look as pleased as a peadophile in a playground.");
     }
 
-    console.log(descriptions);
-
     return roasts;
   }
 
