@@ -91,7 +91,7 @@ export default function Home() {
         </Heading>
 
         <Text>
-          Another stupid project by{" "}
+          Yet another stupid project by{" "}
           <Link color="blue.500" isExternal href="https://twitter.com/aabbccsmith">
             @aabbccsmith
           </Link>{" "}
